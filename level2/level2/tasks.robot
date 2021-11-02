@@ -9,7 +9,9 @@ Library          RPA.HTTP
 Library          RPA.Excel.Files
 Library          RPA.Tables
 Library          RPA.PDF
-Library    Screenshot
+Library          Screenshot
+Library          RPA.Archive
+Library          RPA.Dialogs
 *** Variables ***
 ${output_folder}     ${CURDIR}${/}output
 ${receipt_folder}    ${CURDIR}${/}output${/}receipts
@@ -20,7 +22,10 @@ Open the robot order website
 
 *** Keywords ***
 Get orders
-    Download    https://robotsparebinindustries.com/orders.csv    overwrite=True
+    Add text input    url    label=Orders CSV Url
+    ${response}=    Run dialog
+    # https://robotsparebinindustries.com/orders.csv
+    Download     ${response.url}   overwrite=True
     ${orders}=  Read table from CSV    orders.csv
     [Return]    ${orders}
 
@@ -63,6 +68,9 @@ Embed the robot screenshot to the receipt PDF file
     Close Pdf    ${pdf}
 
 Create a ZIP file of the receipts
+    ${zip_file_name}=    Set Variable    ${OUTPUT_DIR}/PDFs.zip
+    Archive Folder With Zip    ${receipt_folder}    ${zip_file_name}
+
 
 *** Tasks ***
 Order robots from RobotSpareBin Industries Inc
