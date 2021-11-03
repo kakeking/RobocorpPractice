@@ -12,13 +12,15 @@ Library          RPA.PDF
 Library          Screenshot
 Library          RPA.Archive
 Library          RPA.Dialogs
+Library          RPA.Robocorp.Vault
 *** Variables ***
 ${output_folder}     ${CURDIR}${/}output
 ${receipt_folder}    ${CURDIR}${/}output${/}receipts
 
 *** Keywords ***
 Open the robot order website
-    Open Available Browser   https://robotsparebinindustries.com/#/robot-order
+    ${url}=    Get Secret    base_url
+    Open Available Browser   ${url}[url]
 
 *** Keywords ***
 Get orders
